@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PhotoActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:text="병충해 피해가 예상되는 부위의 사진" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="229dp"/>
+
+    <Button
+        android:id="@+id/camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사진 촬영하기" />
+
+    <Button
+        android:id="@+id/album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="앨범에서 가져오기" />
+
+
+</LinearLayout>
