@@ -1,34 +1,73 @@
 package com.example.goyang_project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.ContentResolver;
-import android.content.res.AssetFileDescriptor;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.tensorflow.lite.Interpreter;
+import org.pytorch.IValue;
+import org.pytorch.LiteModuleLoader;
+import org.pytorch.Module;
+import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
 
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity implements Runnable{
 
-    ImageView image;
-    TextView info;
-    Button moreInfo;
+
+    private ImageView image;
+    private Button moreInfo;
+
+    private int mImageIndex = 0;
+    private Bitmap mBitmap = null;
+    private Module mModule = null;
+    private float mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY;
+    private ResultView mResultView;
+
+
+    public static String assetFilePath(Context context, String assetName) throws IOException {
+        File file = new File(context.getFilesDir(), assetName);
+        if (file.exists() && file.length() > 0) {
+            return file.getAbsolutePath();
+        }
+
+        try (InputStream is = context.getAssets().open(assetName)) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, read);
+                }
+                os.flush();
+            }
+            return file.getAbsolutePath();
+        }
+    }
+
 
 
     @Override
@@ -36,85 +75,119 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        image = findViewById(R.id.resultImage);
-        info = findViewById(R.id.information);
         moreInfo = findViewById(R.id.moreInfo);
+        image = findViewById(R.id.resultImage);
+        mResultView = findViewById(R.id.resultView);
+        mResultView.setVisibility(View.INVISIBLE);
 
-        //각 모델에 따른 input , output shape 각자 맞게 변환
-        // mobilenetcheck.h5 일시 224 * 224 * 3
-        float[][][][] input = new float[1][640][640][3];
-        float[][][] output = new float[1][27][25200]; //tflite에 버섯 종류 5개라서 (내기준)
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
+
 
 
         Uri saveImage = getIntent().getParcelableExtra("image");
         ContentResolver resolver = getContentResolver();
 
+
+
+
         try{
             int batchNum=0;
 
             InputStream inputStream = resolver.openInputStream(saveImage);
-            Bitmap imgBit = BitmapFactory.decodeStream(inputStream);
-            //image.setImageBitmap(imgBit);
+            mBitmap = BitmapFactory.decodeStream(inputStream);
+            image.setImageBitmap(mBitmap);
             inputStream.close();
-
-
-            // x,y 최댓값 사진 크기에 따라 달라짐 (조절 해줘야함)
-            for (int x = 0; x < 640; x++) {
-                for (int y = 0; y < 640; y++) {
-                    int pixel = imgBit.getPixel(x, y);
-                    input[batchNum][x][y][0] = Color.red(pixel) / 1.0f;
-                    input[batchNum][x][y][1] = Color.green(pixel) / 1.0f;
-                    input[batchNum][x][y][2] = Color.blue(pixel) / 1.0f;
-                }
-            }
-
-            // 자신의 tflite 이름 써주기
-            Interpreter lite = getTfliteInterpreter("best-fp16.tflite");
-            lite.run(input, output);
-
-            image.setScaleType(ImageView.ScaleType.FIT_XY);
-            image.setImageBitmap(imgBit);
-
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        int i;
 
-        // 텍스트뷰에 무슨 버섯인지 띄우기 but error남 ㅜㅜ 붉은 사슴뿔만 주구장창
-        /*for (i = 0; i < 22; i++) {
-            if (output[0][i] * 100 > 90) {
-                info.setText(String.format("결과 : %d   정확도 : %.5f", i, output[0][i] * 100));
-            } else
-                continue;
-        }*/
+        moreInfo = findViewById(R.id.moreInfo);
+        moreInfo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                moreInfo.setEnabled(false);
+
+                mImgScaleX = (float)mBitmap.getWidth() / PrePostProcessor.mInputWidth;
+                mImgScaleY = (float)mBitmap.getHeight() / PrePostProcessor.mInputHeight;
+
+                mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight() ? (float)mResultView.getWidth() / mBitmap.getWidth() : (float)mResultView.getHeight() / mBitmap.getHeight());
+                mIvScaleY  = (mBitmap.getHeight() > mBitmap.getWidth() ? (float)mResultView.getHeight() / mBitmap.getHeight() : (float)mResultView.getWidth() / mBitmap.getWidth());
+
+                mStartX = (mResultView.getWidth() - mIvScaleX * mBitmap.getWidth())/2;
+                mStartY = (mResultView.getHeight() -  mIvScaleY * mBitmap.getHeight())/2;
+
+                Thread thread = new Thread(ResultActivity.this);
+                thread.start();
+            }
+        });
+        /*
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+
+        mImgScaleX = (float)mBitmap.getWidth() / PrePostProcessor.mInputWidth;
+        mImgScaleY = (float)mBitmap.getHeight() / PrePostProcessor.mInputHeight;
+
+        mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight() ? (float)mResultView.getWidth() / mBitmap.getWidth() : (float)mResultView.getHeight() / mBitmap.getHeight());
+        mIvScaleY  = (mBitmap.getHeight() > mBitmap.getWidth() ? (float)mResultView.getHeight() / mBitmap.getHeight() : (float)mResultView.getWidth() / mBitmap.getWidth());
+
+        mStartX = (mResultView.getWidth() - mIvScaleX * mBitmap.getWidth())/2;
+        mStartY = (mResultView.getHeight() -  mIvScaleY * mBitmap.getHeight())/2;
 
 
-    }
 
-    private Interpreter getTfliteInterpreter(String modelPath) {
+        Thread thread = new Thread(ResultActivity.this);
+        thread.start();
+*/
         try {
-            return new Interpreter(loadModelFile(ResultActivity.this, modelPath));
+
+            mModule = LiteModuleLoader.load(ResultActivity.assetFilePath(getApplicationContext(), "best.torchscript.ptl"));
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("classes.txt")));
+            String line;
+            List<String> classes = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                classes.add(line);
+            }
+            PrePostProcessor.mClasses = new String[classes.size()];
+            classes.toArray(PrePostProcessor.mClasses);
+        } catch (IOException e) {
+            Log.e("Object Detection", "Error reading assets", e);
+            finish();
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+
+
+
+
+    }
+
+    @Override
+    public void run() {
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(mBitmap, PrePostProcessor.mInputWidth, PrePostProcessor.mInputHeight, true);
+        final Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(resizedBitmap, PrePostProcessor.NO_MEAN_RGB, PrePostProcessor.NO_STD_RGB);
+
+        IValue[] outputTuple = mModule.forward(IValue.from(inputTensor)).toTuple();
+
+        final Tensor outputTensor = outputTuple[0].toTensor();
+        final float[] outputs = outputTensor.getDataAsFloatArray();
+        final ArrayList<Result> results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+
+        runOnUiThread(() -> {
+            mResultView.setResults(results);
+            mResultView.invalidate();
+            mResultView.setVisibility(View.VISIBLE);
+        });
     }
 
 
-
-
-    public MappedByteBuffer loadModelFile(Activity activity, String modelPath) throws IOException {
-        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(modelPath);
-        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-        FileChannel fileChannel = inputStream.getChannel();
-        long startOffset = fileDescriptor.getStartOffset();
-        long declaredLength = fileDescriptor.getDeclaredLength();
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
-    }
 }

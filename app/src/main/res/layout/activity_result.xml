@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ResultActivity">
+    android:layout_height="match_parent">
+
 
     <ImageView
         android:id="@+id/resultImage"
-        android:layout_width="match_parent"
-        android:layout_height="373dp" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        android:background="#FFFFFF"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <Button
-        android:id="@+id/moreInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+    <com.example.goyang_project.ResultView
+        android:id="@+id/resultView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
-</LinearLayout>
+        android:layout_marginTop="20dp"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="564dp"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/moreInfo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
+
+    <Button
+        android:id="@+id/moreInfo"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/testButton"
+        app:layout_constraintTop_toTopOf="@+id/testButton" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
