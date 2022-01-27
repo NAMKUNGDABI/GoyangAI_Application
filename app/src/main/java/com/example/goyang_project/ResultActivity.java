@@ -47,6 +47,8 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
     private Module mModule = null;
     private float mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY;
     private ResultView mResultView;
+    Bitmap b;
+
 
 
     // 파일 경로 return
@@ -81,6 +83,8 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         mResultView = findViewById(R.id.resultView);
         mResultView.setVisibility(View.INVISIBLE);
 
+        //b = Bitmap.createBitmap((float)mResultView.getWidth(), (float)mResultView.getHeight(), Bitmap.Config.ARGB_8888);
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
@@ -97,6 +101,7 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         try{
             InputStream inputStream = resolver.openInputStream(saveImage);
             mBitmap = BitmapFactory.decodeStream(inputStream);
+
             image.setImageBitmap(mBitmap);
             inputStream.close();
         } catch (IOException e) {
@@ -150,6 +155,7 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         final Tensor outputTensor = outputTuple[0].toTensor();
         final float[] outputs = outputTensor.getDataAsFloatArray();
         final ArrayList<Result> results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+
 
         runOnUiThread(() -> {
             mResultView.setResults(results);

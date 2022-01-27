@@ -36,6 +36,8 @@ public class PhotoActivity extends AppCompatActivity {
     ImageView imageView;
     Button inv_btn;
 
+    Uri fileUri;
+
     final static int TAKE_PICTURE = 1;
 
     String CamPicturePath;
@@ -90,8 +92,13 @@ public class PhotoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"사진을 올려주세요",Toast.LENGTH_LONG).show();
                 }
                 else{
-                    Intent intent = new Intent(PhotoActivity.this,ResultActivity.class);
-                    startActivity(intent);
+
+                    Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
+                    mainToRe.putExtra("image",fileUri);
+                    startActivityForResult(mainToRe,2222);
+
+//                    Intent intent = new Intent(PhotoActivity.this,ResultActivity.class);
+//                    startActivity(intent);
                 }
 
             }
@@ -118,7 +125,7 @@ public class PhotoActivity extends AppCompatActivity {
             //갤러리부분
             if(requestCode==1111){
                 if(resultCode==RESULT_OK){
-                    Uri fileUri = intent.getData();
+                    fileUri = intent.getData();
                     try{
                         int batchNum=0;
                         Bitmap mBitmap;
@@ -131,22 +138,14 @@ public class PhotoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    /*
-                    Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
-                    mainToRe.putExtra("image",fileUri);
-                    startActivityForResult(mainToRe,2222);
-                    */
+
                 }
             }
             else{
                 //카메라부분
                 if (resultCode == RESULT_OK) {
                     File file = new File(CamPicturePath);
-                    /*
-                    Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
-                    mainToRe.putExtra("image",file);
-                    startActivityForResult(mainToRe,3333);
-                    */
+                    fileUri=Uri.fromFile(file);
                     ImageDecoder.Source source = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
@@ -158,6 +157,12 @@ public class PhotoActivity extends AppCompatActivity {
                         }
                         if (bitmap != null) {
                             imageView.setImageBitmap(bitmap);
+                            /*
+                            Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
+                            mainToRe.putExtra("image",file);
+                            startActivityForResult(mainToRe,3333);
+                            */
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
