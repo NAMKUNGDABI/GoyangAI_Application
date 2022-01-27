@@ -49,6 +49,7 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
     private ResultView mResultView;
 
 
+    // 파일 경로 return
     public static String assetFilePath(Context context, String assetName) throws IOException {
         File file = new File(context.getFilesDir(), assetName);
         if (file.exists() && file.length() > 0) {
@@ -81,7 +82,6 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         mResultView.setVisibility(View.INVISIBLE);
 
 
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
@@ -91,25 +91,17 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         }
 
 
-
         Uri saveImage = getIntent().getParcelableExtra("image");
         ContentResolver resolver = getContentResolver();
 
-
-
-
         try{
-            int batchNum=0;
-
             InputStream inputStream = resolver.openInputStream(saveImage);
             mBitmap = BitmapFactory.decodeStream(inputStream);
             image.setImageBitmap(mBitmap);
             inputStream.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
         moreInfo = findViewById(R.id.moreInfo);
@@ -132,9 +124,7 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
         });
 
         try {
-
             mModule = LiteModuleLoader.load(ResultActivity.assetFilePath(getApplicationContext(), "best.torchscript.ptl"));
-
             BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("classes.txt")));
             String line;
             List<String> classes = new ArrayList<>();
@@ -147,10 +137,6 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
             Log.e("Object Detection", "Error reading assets", e);
             finish();
         }
-
-
-
-
 
     }
 

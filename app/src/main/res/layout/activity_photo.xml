@@ -29,5 +29,11 @@
         android:layout_height="wrap_content"
         android:text="앨범에서 가져오기" />
 
+    <Button
+        android:id="@+id/inv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="분석하기" />
+
 
 </LinearLayout>

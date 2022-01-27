@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class PhotoActivity extends AppCompatActivity {
     Button cam_btn;
     Button al_btn;
     ImageView imageView;
+    Button inv_btn;
 
     final static int TAKE_PICTURE = 1;
 
@@ -47,6 +49,7 @@ public class PhotoActivity extends AppCompatActivity {
         cam_btn = findViewById(R.id.camera);
         al_btn = findViewById(R.id.album);
         imageView = findViewById(R.id.imageView);
+        inv_btn = findViewById(R.id.inv);
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -77,6 +80,20 @@ public class PhotoActivity extends AppCompatActivity {
                 gallery.setType("image/*");
                 gallery.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(gallery,1111);
+            }
+        });
+
+        inv_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(imageView.getDrawable()==null){
+                    Toast.makeText(getApplicationContext(),"사진을 올려주세요",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Intent intent = new Intent(PhotoActivity.this,ResultActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 
