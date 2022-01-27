@@ -6,8 +6,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +20,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,6 +32,7 @@ public class PhotoActivity extends AppCompatActivity {
     final private static String TAG = "camTage";
     Button cam_btn;
     Button al_btn;
+    ImageView imageView;
 
     final static int TAKE_PICTURE = 1;
 
@@ -39,6 +46,7 @@ public class PhotoActivity extends AppCompatActivity {
 
         cam_btn = findViewById(R.id.camera);
         al_btn = findViewById(R.id.album);
+        imageView = findViewById(R.id.imageView);
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -94,26 +102,49 @@ public class PhotoActivity extends AppCompatActivity {
             if(requestCode==1111){
                 if(resultCode==RESULT_OK){
                     Uri fileUri = intent.getData();
+                    try{
+                        int batchNum=0;
+                        Bitmap mBitmap;
+                        ContentResolver resolver = getContentResolver();
+                        InputStream inputStream = resolver.openInputStream(fileUri);
+                        mBitmap = BitmapFactory.decodeStream(inputStream);
+                        imageView.setImageBitmap(mBitmap);
+                        inputStream.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /*
                     Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
                     mainToRe.putExtra("image",fileUri);
                     startActivityForResult(mainToRe,2222);
-
+                    */
                 }
             }
             else{
                 //카메라부분
                 if (resultCode == RESULT_OK) {
                     File file = new File(CamPicturePath);
+                    /*
                     Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
                     mainToRe.putExtra("image",file);
                     startActivityForResult(mainToRe,3333);
-                    //          Bitmap bitmap;
-                    //              ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
-                    //            try { bitmap = ImageDecoder.decodeBitmap(source);
-                    //              if (bitmap != null) { iv_photo.setImageBitmap(bitmap); }
-                    //        } catch (IOException e) {
-                    //          e.printStackTrace();
-                    //    }
+                    */
+                    ImageDecoder.Source source = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
+                    }
+                    try {
+                        Bitmap bitmap = null;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            bitmap = ImageDecoder.decodeBitmap(source);
+                        }
+                        if (bitmap != null) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }

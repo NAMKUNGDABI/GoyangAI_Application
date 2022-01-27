@@ -130,24 +130,7 @@ public class ResultActivity extends AppCompatActivity implements Runnable{
                 thread.start();
             }
         });
-        /*
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
-        mImgScaleX = (float)mBitmap.getWidth() / PrePostProcessor.mInputWidth;
-        mImgScaleY = (float)mBitmap.getHeight() / PrePostProcessor.mInputHeight;
-
-        mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight() ? (float)mResultView.getWidth() / mBitmap.getWidth() : (float)mResultView.getHeight() / mBitmap.getHeight());
-        mIvScaleY  = (mBitmap.getHeight() > mBitmap.getWidth() ? (float)mResultView.getHeight() / mBitmap.getHeight() : (float)mResultView.getWidth() / mBitmap.getWidth());
-
-        mStartX = (mResultView.getWidth() - mIvScaleX * mBitmap.getWidth())/2;
-        mStartY = (mResultView.getHeight() -  mIvScaleY * mBitmap.getHeight())/2;
-
-
-
-        Thread thread = new Thread(ResultActivity.this);
-        thread.start();
-*/
         try {
 
             mModule = LiteModuleLoader.load(ResultActivity.assetFilePath(getApplicationContext(), "best.torchscript.ptl"));
