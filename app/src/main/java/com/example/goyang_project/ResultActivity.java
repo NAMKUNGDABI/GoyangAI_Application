@@ -37,16 +37,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResultActivity extends AppCompatActivity {//implements Runnable{
+public class ResultActivity extends AppCompatActivity {
 
 
     private ImageView image;
     private Button moreInfo;
 
-    private int mImageIndex = 0;
     private Bitmap mBitmap = null;
-    private Module mModule = null;
-    private float mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY;
     private ResultView mResultView;
     private ArrayList<Result> result;
 

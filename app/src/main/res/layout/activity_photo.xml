@@ -36,28 +36,33 @@
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="56dp"
         android:text="사진 촬영하기"
-        tools:layout_editor_absoluteX="234dp"
-        tools:layout_editor_absoluteY="485dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
         android:text="앨범에서 가져오기"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="485dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toStartOf="@+id/camera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultView" />
 
     <Button
         android:id="@+id/inv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="분석하기"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="577dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.879" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
