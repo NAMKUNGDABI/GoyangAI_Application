@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,13 +24,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.pytorch.IValue;
+import org.pytorch.LiteModuleLoader;
+import org.pytorch.Module;
+import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class PhotoActivity extends AppCompatActivity {
+public class PhotoActivity extends AppCompatActivity implements Runnable{
     final private static String TAG = "camTage";
     Button cam_btn;
     Button al_btn;
@@ -37,11 +50,18 @@ public class PhotoActivity extends AppCompatActivity {
     Button inv_btn;
 
     Uri fileUri;
+    private Bitmap mBitmap = null;
+    private ResultView mResultView;
+
+
 
     final static int TAKE_PICTURE = 1;
 
     String CamPicturePath;
     final static int REQUEST_TAKE_PICTURE = 1;
+
+    private Module mModule = null;
+    private float mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +72,7 @@ public class PhotoActivity extends AppCompatActivity {
         al_btn = findViewById(R.id.album);
         imageView = findViewById(R.id.imageView);
         inv_btn = findViewById(R.id.inv);
+        mResultView = findViewById(R.id.resultView);
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -92,17 +113,39 @@ public class PhotoActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"사진을 올려주세요",Toast.LENGTH_LONG).show();
                 }
                 else{
+                    mImgScaleX = (float)mBitmap.getWidth() / PrePostProcessor.mInputWidth;
+                    mImgScaleY = (float)mBitmap.getHeight() / PrePostProcessor.mInputHeight;
 
-                    Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
-                    mainToRe.putExtra("image",fileUri);
-                    startActivityForResult(mainToRe,2222);
+                    mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight() ? (float)mResultView.getWidth() / mBitmap.getWidth() : (float)mResultView.getHeight() / mBitmap.getHeight());
+                    mIvScaleY  = (mBitmap.getHeight() > mBitmap.getWidth() ? (float)mResultView.getHeight() / mBitmap.getHeight() : (float)mResultView.getWidth() / mBitmap.getWidth());
 
-//                    Intent intent = new Intent(PhotoActivity.this,ResultActivity.class);
-//                    startActivity(intent);
+                    mStartX = (mResultView.getWidth() - mIvScaleX * mBitmap.getWidth())/2;
+                    mStartY = (mResultView.getHeight() -  mIvScaleY * mBitmap.getHeight())/2;
+
+                    Thread thread = new Thread(PhotoActivity.this);
+                    thread.start();
+
                 }
 
             }
         });
+
+
+        try {
+            mModule = LiteModuleLoader.load(PhotoActivity.assetFilePath(getApplicationContext(), "best.torchscript.ptl"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("classes.txt")));
+            String line;
+            List<String> classes = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                classes.add(line);
+            }
+            PrePostProcessor.mClasses = new String[classes.size()];
+            classes.toArray(PrePostProcessor.mClasses);
+        } catch (IOException e) {
+            Log.e("Object Detection", "Error reading assets", e);
+            finish();
+        }
+
 
 
     }
@@ -128,7 +171,6 @@ public class PhotoActivity extends AppCompatActivity {
                     fileUri = intent.getData();
                     try{
                         int batchNum=0;
-                        Bitmap mBitmap;
                         ContentResolver resolver = getContentResolver();
                         InputStream inputStream = resolver.openInputStream(fileUri);
                         mBitmap = BitmapFactory.decodeStream(inputStream);
@@ -151,18 +193,11 @@ public class PhotoActivity extends AppCompatActivity {
                         source = ImageDecoder.createSource(getContentResolver(), Uri.fromFile(file));
                     }
                     try {
-                        Bitmap bitmap = null;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            bitmap = ImageDecoder.decodeBitmap(source);
+                            mBitmap = ImageDecoder.decodeBitmap(source);
                         }
-                        if (bitmap != null) {
-                            imageView.setImageBitmap(bitmap);
-                            /*
-                            Intent mainToRe = new Intent(PhotoActivity.this,ResultActivity.class);
-                            mainToRe.putExtra("image",file);
-                            startActivityForResult(mainToRe,3333);
-                            */
-
+                        if (mBitmap != null) {
+                            imageView.setImageBitmap(mBitmap);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -200,6 +235,46 @@ public class PhotoActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PICTURE); }
         }
+    }
+
+    // 파일 경로 return
+    public static String assetFilePath(Context context, String assetName) throws IOException {
+        File file = new File(context.getFilesDir(), assetName);
+        if (file.exists() && file.length() > 0) {
+            return file.getAbsolutePath();
+        }
+
+        try (InputStream is = context.getAssets().open(assetName)) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, read);
+                }
+                os.flush();
+            }
+            return file.getAbsolutePath();
+        }
+    }
+
+    @Override
+    public void run() {
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(mBitmap, PrePostProcessor.mInputWidth, PrePostProcessor.mInputHeight, true);
+        final Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(resizedBitmap, PrePostProcessor.NO_MEAN_RGB, PrePostProcessor.NO_STD_RGB);
+
+        IValue[] outputTuple = mModule.forward(IValue.from(inputTensor)).toTuple();
+
+        final Tensor outputTensor = outputTuple[0].toTensor();
+        final float[] outputs = outputTensor.getDataAsFloatArray();
+        final ArrayList<Result> results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+
+        Intent intent = new Intent(getApplicationContext(),ResultActivity.class);
+        intent.putExtra("uri",fileUri);
+        intent.putParcelableArrayListExtra("result",results);
+        startActivity(intent);
+
+
+
     }
 
 

@@ -1,39 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".PhotoActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:text="병충해 피해가 예상되는 부위의 사진" />
-
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="229dp"/>
+        android:layout_width="386dp"
+        android:layout_height="390dp"
+        android:layout_marginTop="40dp"
+        android:background="#FFFFFF"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.goyang_project.ResultView
+        android:id="@+id/resultView"
+        android:layout_width="386dp"
+        android:layout_height="390dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="사진 촬영하기" />
+        android:text="사진 촬영하기"
+        tools:layout_editor_absoluteX="234dp"
+        tools:layout_editor_absoluteY="485dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="앨범에서 가져오기" />
+        android:text="앨범에서 가져오기"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="485dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/inv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="분석하기" />
+        android:text="분석하기"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="577dp"
+        tools:ignore="MissingConstraints" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
