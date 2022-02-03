@@ -40,7 +40,8 @@
         <activity
             android:name=".ResultActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/dialogue"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".BaseModuleActivity" />
     </application>

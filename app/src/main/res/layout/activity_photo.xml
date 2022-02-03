@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="386dp"
-        android:layout_height="390dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         app:layout_constraintDimensionRatio="1:1"
@@ -22,8 +22,8 @@
 
     <com.example.goyang_project.ResultView
         android:id="@+id/resultView"
-        android:layout_width="386dp"
-        android:layout_height="390dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_marginTop="40dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"

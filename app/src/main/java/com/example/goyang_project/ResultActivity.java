@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,12 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+        int width = (int) (dm.widthPixels * 0.9);
+        getWindow().getAttributes().width = width;
+        int height = (int) (dm.heightPixels * 0.8);
+        getWindow().getAttributes().height = height;
 
         moreInfo = findViewById(R.id.moreInfo);
         image = findViewById(R.id.resultImage);
