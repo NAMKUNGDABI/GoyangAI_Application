@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="goyangsi">
+        <item>덕양구</item>
+        <item>일산서구</item>
+        <item>일산동구</item>
+    </string-array>
+
+    <string-array name="duckyanggu">
+        <item>주교동</item>
+        <item>원신동</item>
+        <item>흥도동</item>
+        <item>성사1동</item>
+        <item>성사2동</item>
+        <item>효자동</item>
+        <item>삼송동</item>
+        <item>창릉동</item>
+        <item>고양동</item>
+        <item>관산동</item>
+        <item>능곡동</item>
+        <item>화정1동</item>
+        <item>화정2동</item>
+        <item>행주동</item>
+        <item>행신1동</item>
+        <item>행신2동</item>
+        <item>화전동</item>
+        <item>대덕동</item>
+    </string-array>
+
+    <string-array name="ilsandonggu">
+        <item>식사동</item>
+        <item>중산동</item>
+        <item>정발산동</item>
+        <item>풍산동</item>
+        <item>백석1동</item>
+        <item>백석2동</item>
+        <item>마두1동</item>
+        <item>마두2동</item>
+        <item>장항1동</item>
+        <item>장항2동</item>
+        <item>고봉동</item>
+    </string-array>
+
+    <string-array name="ilsanseogu">
+        <item>일산1동</item>
+        <item>일산2동</item>
+        <item>일산3동</item>
+        <item>탄현동</item>
+        <item>주엽1동</item>
+        <item>주엽2동</item>
+        <item>대화동</item>
+        <item>송포동</item>
+        <item>송산동</item>
+    </string-array>
+
+
+
+
+
+
+</resources>
