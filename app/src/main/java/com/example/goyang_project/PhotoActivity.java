@@ -44,18 +44,12 @@ import java.util.List;
 
 public class PhotoActivity extends AppCompatActivity implements Runnable{
     final private static String TAG = "camTage";
-    Button cam_btn;
-    Button al_btn;
+    Button cam_btn, al_btn, inv_btn;
     ImageView imageView;
-    Button inv_btn;
 
     Uri fileUri;
     private Bitmap mBitmap = null;
     private ResultView mResultView;
-
-
-
-    final static int TAKE_PICTURE = 1;
 
     String CamPicturePath;
     final static int REQUEST_TAKE_PICTURE = 1;
@@ -75,15 +69,16 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
         mResultView = findViewById(R.id.resultView);
 
 
+        // 저장소 이용 권한 확인
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                     && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "권한 설정 완료");
-            } else { Log.d(TAG, "권한 설정 요청");
+            } else {
                 ActivityCompat.requestPermissions(PhotoActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
 
+        // 카메라 버튼
         cam_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +91,7 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
             }
         });
 
+        // 앨범 버튼
         al_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,6 +102,7 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
             }
         });
 
+        // 분석 버튼
         inv_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,11 +143,10 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
             finish();
         }
 
-
-
     }
 
-    // 권한 요청
+
+    // 카메라, 앨범 사용시 저장소 이용 권한 요청
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -160,7 +156,7 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
         }
     }
 
-    // 카메라로 촬영한 사진을 가져오는 부분
+    // 사진 가져오기
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -170,17 +166,14 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
                 if(resultCode==RESULT_OK){
                     fileUri = intent.getData();
                     try{
-                        int batchNum=0;
                         ContentResolver resolver = getContentResolver();
                         InputStream inputStream = resolver.openInputStream(fileUri);
                         mBitmap = BitmapFactory.decodeStream(inputStream);
                         imageView.setImageBitmap(mBitmap);
                         inputStream.close();
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
             else{
@@ -203,7 +196,6 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
                         e.printStackTrace();
                     }
                 }
-
             }
         }
         catch (Exception error) {
@@ -272,8 +264,6 @@ public class PhotoActivity extends AppCompatActivity implements Runnable{
         intent.putExtra("uri",fileUri);
         intent.putParcelableArrayListExtra("result",results);
         startActivity(intent);
-
-
 
     }
 

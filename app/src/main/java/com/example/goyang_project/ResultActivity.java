@@ -54,6 +54,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        // ResultActivity dialogue화 시키기위해 화면크기 비율 조정
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int width = (int) (dm.widthPixels * 0.9);
         getWindow().getAttributes().width = width;
@@ -64,6 +65,7 @@ public class ResultActivity extends AppCompatActivity {
         image = findViewById(R.id.resultImage);
         mResultView = findViewById(R.id.resultView);
 
+        // PhotoActivity에서 uri, arraylist 받기
         Uri saveImage = getIntent().getParcelableExtra("uri");
         result = getIntent().getParcelableArrayListExtra("result");
 

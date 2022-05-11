@@ -32,20 +32,22 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button predict_btn, loc_btn;
+    private Button predict_btn, loc_btn;
     private Spinner spinnerGu, spinnerDong;
     private ArrayAdapter<String> arrayAdapter;
+    private TextView cur_loc;
+
     public static final String EXTRA_ADDRESS = "address";
-    TextView cur_loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        spinnerGu = (Spinner)findViewById(R.id.loc_gu);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, (String[])getResources().getStringArray(R.array.goyangsi));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerGu = (Spinner)findViewById(R.id.loc_gu);
         spinnerGu.setAdapter(arrayAdapter);
         spinnerDong = (Spinner)findViewById(R.id.loc_dong);
 
@@ -59,14 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         cur_loc = findViewById(R.id.cur_loc);
 
-/*        predict_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),PhotoActivity.class);
-                startActivity(intent);
-            }
-        });
-*/
     }
 
     @Override
@@ -88,26 +82,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        setSigunguSpinnerAdapterItem(R.array.duckyanggu);
+                        setRegionSpinnerAdapterItem(R.array.duckyanggu);
                         break;
                     case 1:
-                        setSigunguSpinnerAdapterItem(R.array.ilsanseogu);
+                        setRegionSpinnerAdapterItem(R.array.ilsanseogu);
                         break;
                     case 2:
-                        setSigunguSpinnerAdapterItem(R.array.ilsandonggu);
+                        setRegionSpinnerAdapterItem(R.array.ilsandonggu);
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
+
         });
 
     }
 
-    private void setSigunguSpinnerAdapterItem(int array_resource) {
+    private void setRegionSpinnerAdapterItem(int array_resource) {
         if (arrayAdapter != null) {
             spinnerDong.setAdapter(null);
             arrayAdapter = null;

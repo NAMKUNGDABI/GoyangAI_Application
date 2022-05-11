@@ -17,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".PhotoActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -29,21 +28,19 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".PhotoActivity" />
         <activity android:name=".LoadingActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ResultActivity"
+        <activity android:name=".ResultActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/dialogue"/>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".BaseModuleActivity" />
     </application>
 
 </manifest>

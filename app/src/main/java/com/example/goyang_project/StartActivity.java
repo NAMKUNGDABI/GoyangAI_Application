@@ -18,6 +18,8 @@ public class StartActivity extends AppCompatActivity {
 
     private void changeActivity(){
         Handler handler = new Handler();
+
+        // startActivity 2초 띄우고 자동으로 Main 화면으로 넘어가기
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
