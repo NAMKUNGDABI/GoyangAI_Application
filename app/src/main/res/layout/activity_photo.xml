@@ -5,64 +5,100 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context=".PhotoActivity">
 
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로고 넣기"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="355dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="100dp"
         android:background="#FFFFFF"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.goyang_project.ResultView
         android:id="@+id/resultView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="355dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <Button
-        android:id="@+id/camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="56dp"
-        android:text="사진 촬영하기"
+        android:id="@+id/inv"
+        android:layout_width="229dp"
+        android:layout_height="91dp"
+        android:drawableLeft="@drawable/ic_main_icon_check"
+        android:drawablePadding="5dp"
+        android:text="병충해 진단하기"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.887" />
 
     <Button
         android:id="@+id/album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:text="앨범에서 가져오기"
-        app:layout_constraintEnd_toStartOf="@+id/camera"
+        android:drawableTop="@drawable/ic_main_icon_gallary"
+        android:drawablePadding="5dp"
+        android:text="갤러리"
+        app:layout_constraintBottom_toTopOf="@+id/inv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.241"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.783" />
 
     <Button
-        android:id="@+id/inv"
+        android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="분석하기"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="2dp"
+        android:drawableTop="@drawable/ic_main_icon_camera"
+        android:drawablePadding="5dp"
+        android:text="카메라"
+        app:layout_constraintBottom_toTopOf="@+id/inv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.783"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="366dp"
+        android:layout_height="31dp"
+        android:background="#CCDBEFFF"
+        android:drawableLeft="@drawable/photo_infocat"
+        android:drawablePadding="5dp"
+        android:text="자가진단을 위해 직접 촬영을 하거나 사진을 가져오세요"
+        android:textColor="#FF0000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.879" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.163" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

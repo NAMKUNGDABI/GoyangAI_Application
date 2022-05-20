@@ -1,57 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="메인페이지" />
+        android:text="메인페이지"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="고양시" />
+        android:text="고양시"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Spinner
         android:id="@+id/loc_gu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="해당 구를 고르시오"/>
+        android:layout_marginTop="1dp"
+        android:autofillHints="해당 구를 고르시오"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Spinner
         android:id="@+id/loc_dong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="해당 동을 고르시오"/>
+        android:autofillHints="해당 동을 고르시오"
+        app:layout_constraintStart_toStartOf="@+id/loc_gu"
+        app:layout_constraintTop_toBottomOf="@+id/loc_gu" />
 
     <Button
         android:id="@+id/save_loc"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="확인" />
+        android:text="확인"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loc_dong" />
 
     <TextView
         android:id="@+id/cur_loc"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="현재 위치 : " />
+        android:text="현재 위치 : "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_loc" />
 
     <TextView
         android:id="@+id/weather"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="지역 선택 후 날씨 정보 표시" />
+        android:text="지역 선택 후 날씨 정보 표시"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cur_loc" />
 
     <Button
         android:id="@+id/predict"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="병해충 자가진단" />
-</LinearLayout>
+        android:layout_marginTop="340dp"
+        android:text="병충해 자가진단"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="78dp"
+        android:layout_height="75dp"
+        android:background="@drawable/left_button"
+        android:text="전문가 의뢰"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="78dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/center_button"
+        android:text="농업상품 구매"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button9"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/button7" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="95dp"
+        android:layout_height="75dp"
+        android:background="@drawable/round_button"
+        android:text="더보기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/predict"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="78dp"
+        android:layout_height="75dp"
+        android:background="@drawable/center_button"
+        android:text="병충해 예측"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button11"
+        app:layout_constraintStart_toEndOf="@+id/button9" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="78dp"
+        android:layout_height="75dp"
+        android:background="@drawable/right_button"
+        android:text="주간 농사 정보"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
